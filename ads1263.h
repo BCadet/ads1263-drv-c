@@ -3,6 +3,30 @@
 
 #include <stdint.h>
 
+enum ADS1263_AINMUX {
+    ADS1263_AINMUX_AIN0 = 0,
+    ADS1263_AINMUX_AIN1 = 1,
+    ADS1263_AINMUX_AIN2 = 2,
+    ADS1263_AINMUX_AIN3 = 3,
+    ADS1263_AINMUX_AIN4 = 4,
+    ADS1263_AINMUX_AIN5 = 5,
+    ADS1263_AINMUX_AIN6 = 6,
+    ADS1263_AINMUX_AIN7 = 7,
+    ADS1263_AINMUX_AIN8 = 8,
+    ADS1263_AINMUX_AIN9 = 9,
+    ADS1263_AINMUX_AINCOM = 10,
+    ADS1263_AINMUX_TEMP = 11,
+    ADS1263_AINMUX_ANALOG_POWER = 12,
+    ADS1263_AINMUX_DIGITAL_POWER = 13,
+    ADS1263_AINMUX_TDAC = 14,
+    ADS1263_AINMUX_FLOAT = 15,
+};
+
+#define MUXP(x) ((x<<4) & 0xF0)
+#define MUXN(x) ((x) & 0x0F)
+
+#define MUX(ainmuxP, ainmuxN) (MUXP(ainmuxP) | MUXN(ainmuxN))
+
 /* ____________________ DEFINE Section ____________________ */
 /* Register addresses */
 #define ADS1263_ID              (0x00)
@@ -83,136 +107,223 @@
 
 /* ____________________ Types  Section ____________________ */
 
-typedef struct {
-    uint32_t data;
-} adc1data_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t revId:5;
+	uint8_t devId:3;
+    };
+    uint8_t reg;
+} ads1263_id_t;
 
-typedef struct {
-	uint8_t devId;
-	uint8_t revId;
-} id_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t intRef:1;
+    uint8_t vBias:1;
+    uint8_t __reserved:2;
+	uint8_t reset:1;
+    uint8_t _reserved:3;
+    };
+    uint8_t reg;
+} ads1263_power_t;
 
-typedef struct {
-	uint8_t reset;
-    uint8_t vBias;
-    uint8_t intRef;
-} power_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t crc:2;
+    uint8_t status:1;
+    uint8_t timeOut:1;
+    uint8_t _reserved:4;
+    };
+    uint8_t reg;
+} ads1263_interface_t;
 
-typedef struct {
-    uint8_t timeOut;
-    uint8_t status;
-    uint8_t crc;
-}   interface_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t delay:4;
+    uint8_t chop:2;
+    uint8_t runMode:1;
+    uint8_t refRev:1;
+    };
+    uint8_t reg;
+} ads1263_mode0_t;
 
-typedef struct {
-    uint8_t refRev;
-    uint8_t runMode;
-    uint8_t chop;
-    uint8_t delay;
-} mode0_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t sBMag:3;
+    uint8_t sBPol:1;
+    uint8_t sBADC:1;
+    uint8_t filter:3;
+    };
+    uint8_t reg;
+} ads1263_mode1_t;
 
-typedef struct {
-    uint8_t filter;
-    uint8_t sBADC;
-    uint8_t sBPol;
-    uint8_t sBMag;
-} mode1_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t dr:4;
+    uint8_t gain:3;
+    uint8_t byPass:1;
+    };
+    uint8_t reg;
+} ads1263_mode2_t;
 
-typedef struct {
-    uint8_t byPass;
-    uint8_t gain;
-    uint8_t dr;
-} mode2_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t muxN:4;
+    uint8_t muxP:4;
+    };
+    uint8_t reg;
+} ads1263_inpmux_t;
 
-typedef struct {
-    uint8_t muxP;
-    uint8_t muxN;
-} inpmux_t;
-
-typedef struct {
+typedef union {
+    struct __attribute__((packed)) {
+        uint8_t ofcal0;
+        uint8_t ofcal1;
+        uint8_t ofcal2;
+        uint8_t _reserved;
+    };
     uint32_t ofc;
-} ofcal_t;
+} ads1263_ofcal_t;
 
-typedef struct {
+typedef union {
+struct __attribute__((packed)) {
+    uint8_t fscal0;
+    uint8_t fscal1;
+    uint8_t fscal2;
+    uint8_t _reserved;
+};
     uint32_t fscal;
-} fscal_t;
+} ads1263_fscal_t;
 
-typedef struct {
-    uint8_t mux1;
-    uint8_t mux2;
-} idacmux_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t mux2:4;
+    uint8_t mux1:4;
+    };
+    uint8_t reg;
+} ads1263_idacmux_t;
 
-typedef struct {
-    uint8_t mag1;
-    uint8_t mag2;
-} idacmag_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t mag2:4;
+    uint8_t mag1:4;
+    };
+    uint8_t reg;
+} ads1263_idacmag_t;
 
-typedef struct {
-    uint8_t rMuxP;
-    uint8_t rMuxN;
-} refmux_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t rMuxN:3;
+    uint8_t rMuxP:3;
+    uint8_t _reserved:2;
+    };
+    uint8_t reg;
+} ads1263_refmux_t;
 
-typedef struct {
-    uint8_t outP;
-    uint8_t magP;
-} tdacp_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t magP:5;
+    uint8_t _reserved:2;
+    uint8_t outP:1;
+    };
+    uint8_t reg;
+} ads1263_tdacp_t;
 
-typedef struct {
-    uint8_t outN;
-    uint8_t magN;
-} tdacn_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t magN:5;
+    uint8_t _reserved:2;
+    uint8_t outN:1;
+    };
+    uint8_t reg;
+} ads1263_tdacn_t;
 
-typedef struct {
-    uint8_t con0;
-    uint8_t con1;
-    uint8_t con2;
-    uint8_t con3;
-    uint8_t con4;
-    uint8_t con5;
-    uint8_t con6;
-    uint8_t con7;
-} gpiocon_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t con7:1;
+    uint8_t con6:1;
+    uint8_t con5:1;
+    uint8_t con4:1;
+    uint8_t con3:1;
+    uint8_t con2:1;
+    uint8_t con1:1;
+    uint8_t con0:1;
+    };
+    uint8_t reg;
+} ads1263_gpiocon_t;
 
-typedef struct {
-    uint8_t dir0;
-    uint8_t dir1;
-    uint8_t dir2;
-    uint8_t dir3;
-    uint8_t dir4;
-    uint8_t dir5;
-    uint8_t dir6;
-    uint8_t dir7;
-} gpiodir_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t dir7:1;
+    uint8_t dir6:1;
+    uint8_t dir5:1;
+    uint8_t dir4:1;
+    uint8_t dir3:1;
+    uint8_t dir2:1;
+    uint8_t dir1:1;
+    uint8_t dir0:1;
+    };
+    uint8_t reg;
+} ads1263_gpiodir_t;
 
-typedef struct {
-    uint8_t dat0;
-    uint8_t dat1;
-    uint8_t dat2;
-    uint8_t dat3;
-    uint8_t dat4;
-    uint8_t dat5;
-    uint8_t dat6;
-    uint8_t dat7;
-} gpiodat_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t dat7:1;
+    uint8_t dat6:1;
+    uint8_t dat5:1;
+    uint8_t dat4:1;
+    uint8_t dat3:1;
+    uint8_t dat2:1;
+    uint8_t dat1:1;
+    uint8_t dat0:1;
+    };
+    uint8_t reg;
+} ads1263_gpiodat_t;
 
-typedef struct {
-    uint8_t dr2;
-    uint8_t ref2;
-    uint8_t gain2;
-} adc2cfg_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t gain2:3;
+    uint8_t ref2:3;
+    uint8_t dr2:2;
+    };
+    uint8_t reg;
+} ads1263_adc2cfg_t;
 
-typedef struct {
-    uint8_t muxP2;
-    uint8_t muxN2;
-} adc2mux_t;
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t muxN2:4;
+    uint8_t muxP2:4;
+    };
+    uint8_t reg;
+} ads1263_adc2mux_t;
 
-typedef struct {
+typedef union {
+    struct __attribute__((packed)) {
+        uint8_t adc2ofc0;
+        uint8_t adc2ofc1;
+    };
     uint16_t ofc2;
-} adc2ofc_t;
+} ads1263_adc2ofc_t;
 
-typedef struct {
+typedef union {
+    struct __attribute__((packed)) {
+        uint8_t adc2fsc0;
+        uint8_t adc2fsc1;
+    };
     uint16_t fsc2;
-} adc2fsc_t;
+} ads1263_adc2fsc_t;
+
+typedef union {
+    struct __attribute__((packed)) {
+    uint8_t reset:1;
+    uint8_t pgad_alm:1;
+    uint8_t pgah_alm:1;
+    uint8_t pgal_alm:1;
+    uint8_t ref_alm:1;
+    uint8_t extclk:1;
+    uint8_t adc1:1;
+    uint8_t adc2:1;
+    };
+    uint8_t reg;
+} ads1263_status_t;
 
 
 
@@ -223,28 +334,28 @@ typedef struct {
     void (*SetReset)(uint8_t state);
     void (*SetStart)(uint8_t state);
 
-    adc1data_t adc1data;
-    id_t id;
-    power_t power;
-    interface_t interface;
-    mode0_t mode0;
-    mode1_t mode1;
-    mode2_t mode2;
-    inpmux_t inpmux;
-    ofcal_t ofcal;
-    fscal_t fscal;
-    idacmux_t idacmux;
-    idacmag_t idacmag;
-    refmux_t refmux;
-    tdacp_t tdacp;
-    tdacn_t tdacn;
-    gpiocon_t gpiocon;
-    gpiodir_t gpiodir;
-    gpiodat_t gpiodat;
-    adc2cfg_t adc2cfg;
-    adc2mux_t adc2mux;
-    adc2ofc_t adc2ofc;
-    adc2fsc_t adc2fsc;
+    ads1263_id_t id;
+    ads1263_power_t power;
+    ads1263_interface_t interface;
+    ads1263_mode0_t mode0;
+    ads1263_mode1_t mode1;
+    ads1263_mode2_t mode2;
+    ads1263_inpmux_t inpmux;
+    ads1263_ofcal_t ofcal;
+    ads1263_fscal_t fscal;
+    ads1263_idacmux_t idacmux;
+    ads1263_idacmag_t idacmag;
+    ads1263_refmux_t refmux;
+    ads1263_tdacp_t tdacp;
+    ads1263_tdacn_t tdacn;
+    ads1263_gpiocon_t gpiocon;
+    ads1263_gpiodir_t gpiodir;
+    ads1263_gpiodat_t gpiodat;
+    ads1263_adc2cfg_t adc2cfg;
+    ads1263_adc2mux_t adc2mux;
+    ads1263_adc2ofc_t adc2ofc;
+    ads1263_adc2fsc_t adc2fsc;
+    ads1263_status_t status;
 } ads1263_t;
 
 /* ________________________________________________________ */
@@ -261,12 +372,11 @@ void ADS1263_Init(ads1263_t * ads1263);
 void ADS1263_CheckReset(ads1263_t * ads1263);
 void ADS1263_StartAdc1(ads1263_t * ads1263);
 void ADS1263_StopAdc1(ads1263_t * ads1263);
-uint32_t ADS1263_ReadAdc1(ads1263_t * ads1263);
+void ADS1263_StartAdc2(ads1263_t * ads1263);
+void ADS1263_StopAdc2(ads1263_t * ads1263);
+uint32_t ADS1263_ReadAdc(ads1263_t * ads1263, uint8_t adc);
 uint8_t ADS1263_ReadReg(ads1263_t * ads1263, uint8_t regAddress);
 void ADS1263_WriteReg(ads1263_t * ads1263, uint8_t regAddress, uint8_t data);
-
-void ADS1263_GetReadRegsCmd(uint8_t regAddress, uint8_t numOfRegToRead, uint8_t readCmd[]);
-void ADS1263_GetWriteRegsCmd(uint8_t regAddress, uint8_t numOfRegToWrite, uint8_t data[], uint8_t writeCmd[]);
 
 /*          Reading Register Data Functions Section          */
 void ADS1263_GetIdState(ads1263_t * ads1263);
@@ -304,26 +414,7 @@ void ADS1263_SetTDACPState(ads1263_t * ads1263, uint8_t regVal);
 void ADS1263_SetTDACNState(ads1263_t * ads1263, uint8_t regVal);
 /* --------------------------------------------------------- */
 
-/*                 Parsing Functions Section                 */
-void ADS1263_ParseIdReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParsePowerReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseInterfaceReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseMode0Reg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseMode1Reg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseMode2Reg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseInputMuxReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseIDACMuxReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseIDACMagReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseRefMuxReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseTDACPReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseTDACNReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseGpioConReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseGpioDirReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseGpioDatReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseAdc2CfgReg(ads1263_t * ads1263, uint8_t regVal);
-void ADS1263_ParseAdc2MuxReg(ads1263_t * ads1263, uint8_t regVal);
-/* -------------------------------------------------------- */
-
+void ADS1263_DumpRegisters(ads1263_t * ads1263);
 
 /* ________________________________________________________ */
 
