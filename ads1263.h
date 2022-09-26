@@ -59,7 +59,7 @@ enum ADS1263_NEGATIVE_REFMUX {
 };
 
 /** Write positive reference channel bits*/
-#define REFMUXP(x) ((x<<3) & 0xF0)
+#define REFMUXP(x) ((x<<3) & 0b00111000)
 /** Write positive reference channel bits*/
 #define REFMUXN(x) ((x) & 0x0F)
 
