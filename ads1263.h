@@ -69,6 +69,55 @@ enum ADS1263_NEGATIVE_REFMUX {
  */
 #define REFMUX(ainmuxP, ainmuxN) (REFMUXP(ainmuxP) | REFMUXN(ainmuxN))
 
+/** Possible data rate (in sps)*/
+enum ADS1263_DATA_RATE {
+    ADS1263_DR_2_5 = 0;
+    ADS1263_DR_5 = 1;
+    ADS1263_DR_10 = 2;
+    ADS1263_DR_16_6 = 3;
+    ADS1263_DR_20 = 4;
+    ADS1263_DR_50 = 5;
+    ADS1263_DR_60 = 6;
+    ADS1263_DR_100 = 7;
+    ADS1263_DR_400 = 8;
+    ADS1263_DR_1200 = 9;
+    ADS1263_DR_2400 = 10;
+    ADS1263_DR_4800 = 11;
+    ADS1263_DR_7200 = 12;
+    ADS1263_DR_14400 = 13;
+    ADS1263_DR_19200 = 14;
+    ADS1263_DR_38400 = 15;
+};
+
+/** Possible PGA gain (in V/V)*/
+enum ADS1263_DATA_RATE {
+    ADS1263_GAIN_1 = 0;
+    ADS1263_GAIN_2 = 1;
+    ADS1263_GAIN_4 = 2;
+    ADS1263_GAIN_8 = 3;
+    ADS1263_GAIN_16 = 4;
+    ADS1263_GAIN_32 = 5;
+};
+
+/** Possible PGA Bypass*/
+enum ADS1263_DATA_RATE {
+    ADS1263_PGA_ACTIVE = 0;
+    ADS1263_PGA_BYPASS = 1;
+};
+
+/** Write BYPASS bit*/
+#define PGA_BYPASS(x) ((x<<7) & 0xF0)
+/** Write PGA gain bits*/
+#define GAIN(x) ((x<<4) & 0xF0)
+/** Write data rate bits*/
+#define DATARATE(x) ((x) & 0x0F)
+
+/** 
+ * Return MODE2 register configuration with GPA gain and data rate
+ */
+#define MODE2(bypass, gain, datarate) (PGA_BYPASS(x) | GAIN(ainmuxP) | DATARATE(ainmuxN))
+
+
 /* ____________________ DEFINE Section ____________________ */
 /* Register addresses */
 #define ADS1263_ID              (0x00)
