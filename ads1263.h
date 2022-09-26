@@ -1,8 +1,15 @@
+/** \file */
+/** \defgroup ads
+ *  @{
+ */
+
 #ifndef INC_ADS1263_H_
 #define INC_ADS1263_H_
 
 #include <stdint.h>
 
+/* ____________________ Enum Section ____________________ */
+/** Input channels */
 enum ADS1263_AINMUX {
     ADS1263_AINMUX_AIN0 = 0,
     ADS1263_AINMUX_AIN1 = 1,
@@ -22,10 +29,94 @@ enum ADS1263_AINMUX {
     ADS1263_AINMUX_FLOAT = 15,
 };
 
+/** Write positive input channel bits*/
 #define MUXP(x) ((x<<4) & 0xF0)
+/** Write Negative input channel bits*/
 #define MUXN(x) ((x) & 0x0F)
 
+/** 
+ * Return input channel configuration in register. 
+ * For possible channel value refer to #ADS1263_AINMUX
+ */
 #define MUX(ainmuxP, ainmuxN) (MUXP(ainmuxP) | MUXN(ainmuxN))
+
+/** Positive Reference channels*/ 
+enum ADS1263_POSITIVE_REFMUX {
+    ADS1263_P_REFMUX_INTERNAL_REF = 0,
+    ADS1263_P_REFMUX_EXTERNAL_AIN0 = 1,
+    ADS1263_P_REFMUX_EXTERNAL_AIN2 = 2,
+    ADS1263_P_REFMUX_EXTERNAL_AIN4 = 3,
+    ADS1263_P_REFMUX_INTERNAL_ANALOG_VAVDD = 4,
+};
+
+/** Positive Reference channels*/ 
+enum ADS1263_NEGATIVE_REFMUX {
+    ADS1263_N_REFMUX_INTERNAL_REF = 0,
+    ADS1263_N_REFMUX_EXTERNAL_AIN1 = 1,
+    ADS1263_N_REFMUX_EXTERNAL_AIN3 = 2,
+    ADS1263_N_REFMUX_EXTERNAL_AIN5 = 3,
+    ADS1263_N_REFMUX_INTERNAL_ANALOG_VAVSS = 4,
+};
+
+/** Write positive reference channel bits*/
+#define REFMUXP(x) ((x<<3) & 0b00111000)
+/** Write positive reference channel bits*/
+#define REFMUXN(x) ((x) & 0x0F)
+
+/** 
+ * Return reference channel configuration in register. 
+ * For possible channel value refer to #ADS1263_POSITIVE_REFMUX and #ADS1263_NEGATIVE_REFMUX
+ */
+#define REFMUX(muxP, muxN) (REFMUXP(muxP) | REFMUXN(muxN))
+
+/** Possible data rate (in sps)*/
+enum ADS1263_DATA_RATE {
+    ADS1263_DR_2_5 = 0,
+    ADS1263_DR_5 = 1,
+    ADS1263_DR_10 = 2,
+    ADS1263_DR_16_6 = 3,
+    ADS1263_DR_20 = 4,
+    ADS1263_DR_50 = 5,
+    ADS1263_DR_60 = 6,
+    ADS1263_DR_100 = 7,
+    ADS1263_DR_400 = 8,
+    ADS1263_DR_1200 = 9,
+    ADS1263_DR_2400 = 10,
+    ADS1263_DR_4800 = 11,
+    ADS1263_DR_7200 = 12,
+    ADS1263_DR_14400 = 13,
+    ADS1263_DR_19200 = 14,
+    ADS1263_DR_38400 = 15,
+};
+
+/** Possible PGA gain (in V/V)*/
+enum ADS1263_PGA_GAIN {
+    ADS1263_GAIN_1 = 0,
+    ADS1263_GAIN_2 = 1,
+    ADS1263_GAIN_4 = 2,
+    ADS1263_GAIN_8 = 3,
+    ADS1263_GAIN_16 = 4,
+    ADS1263_GAIN_32 = 5,
+};
+
+/** Possible PGA Bypass*/
+enum ADS1263_PGA {
+    ADS1263_PGA_ACTIVE = 0,
+    ADS1263_PGA_BYPASS = 1,
+};
+
+/** Write BYPASS bit*/
+#define PGA_BYPASS(x) ((x<<7) & 0xF0)
+/** Write PGA gain bits*/
+#define GAIN(x) ((x<<4) & 0xF0)
+/** Write data rate bits*/
+#define DATARATE(x) ((x) & 0x0F)
+
+/** 
+ * Return MODE2 register configuration with GPA gain and data rate
+ */
+#define MODE2(bypass, gain, datarate) (PGA_BYPASS(bypass) | GAIN(gain) | DATARATE(datarate))
+
 
 /* ____________________ DEFINE Section ____________________ */
 /* Register addresses */
@@ -420,3 +511,4 @@ void ADS1263_DumpRegisters(ads1263_t * ads1263);
 
 
 #endif /* INC_ADS1263_H_ */
+/** @} */ // end of ads group 

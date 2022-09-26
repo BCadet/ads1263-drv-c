@@ -1,3 +1,8 @@
+/** \file */
+/** \ingroup ads
+ *  @{
+ */
+
 #include "ads1263.h"
 
 /*!
@@ -234,6 +239,16 @@ void ADS1263_SetIDACMagState(ads1263_t *ads1263, uint8_t regVal)
 void ADS1263_SetInputMuxState(ads1263_t *ads1263, uint8_t regVal)
 {
     ADS1263_WriteReg(ads1263, ADS1263_INPMUX, regVal);
+}
+
+/*!
+\brief Function for setting Reference Multiplexer Register value
+\param [in] regVal Value of register to set
+*/
+
+void ADS1263_SetReferenceMuxState(ads1263_t *ads1263, uint8_t regVal)
+{
+    ADS1263_WriteReg(ads1263, ADS1263_REFMUX, regVal);
 }
 
 /*!
@@ -594,3 +609,4 @@ void ADS1263_DumpRegisters(ads1263_t *ads1263)
     printf("\r\nadc2ofc\t%04x", ads1263->adc2ofc);
     printf("\r\nadc2fsc\t%04x\r\n", ads1263->adc2fsc.fsc2);
 }
+/** @} */ // end of ads group 
