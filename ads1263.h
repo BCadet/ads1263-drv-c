@@ -1,8 +1,15 @@
+/** \file */
+/** \defgroup ads
+ *  @{
+ */
+
 #ifndef INC_ADS1263_H_
 #define INC_ADS1263_H_
 
 #include <stdint.h>
 
+/* ____________________ Enum Section ____________________ */
+/** Input channels */
 enum ADS1263_AINMUX {
     ADS1263_AINMUX_AIN0 = 0,
     ADS1263_AINMUX_AIN1 = 1,
@@ -22,9 +29,15 @@ enum ADS1263_AINMUX {
     ADS1263_AINMUX_FLOAT = 15,
 };
 
+/** Write positive input channel bits*/
 #define MUXP(x) ((x<<4) & 0xF0)
+/** Write Negative input channel bits*/
 #define MUXN(x) ((x) & 0x0F)
 
+/** 
+ * Return input channel configuration in register. 
+ * For possible channel value refer to #ADS1263_AINMUX
+ */
 #define MUX(ainmuxP, ainmuxN) (MUXP(ainmuxP) | MUXN(ainmuxN))
 
 /* ____________________ DEFINE Section ____________________ */
@@ -420,3 +433,4 @@ void ADS1263_DumpRegisters(ads1263_t * ads1263);
 
 
 #endif /* INC_ADS1263_H_ */
+/** @} */ // end of ads group 

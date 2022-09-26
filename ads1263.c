@@ -1,3 +1,8 @@
+/** \file */
+/** \ingroup ads
+ *  @{
+ */
+
 #include "ads1263.h"
 
 /*!
@@ -594,3 +599,4 @@ void ADS1263_DumpRegisters(ads1263_t *ads1263)
     printf("\r\nadc2ofc\t%04x", ads1263->adc2ofc);
     printf("\r\nadc2fsc\t%04x\r\n", ads1263->adc2fsc.fsc2);
 }
+/** @} */ // end of ads group 
