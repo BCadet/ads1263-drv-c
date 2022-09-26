@@ -242,6 +242,16 @@ void ADS1263_SetInputMuxState(ads1263_t *ads1263, uint8_t regVal)
 }
 
 /*!
+\brief Function for setting Reference Multiplexer Register value
+\param [in] regVal Value of register to set
+*/
+
+void ADS1263_SetReferenceMuxState(ads1263_t *ads1263, uint8_t regVal)
+{
+    ADS1263_WriteReg(ads1263, ADS1263_REFMUX, regVal);
+}
+
+/*!
 \brief Function for setting Power Register value
 \param [in] regVal Value of register to set
 */

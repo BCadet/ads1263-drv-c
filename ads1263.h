@@ -40,6 +40,35 @@ enum ADS1263_AINMUX {
  */
 #define MUX(ainmuxP, ainmuxN) (MUXP(ainmuxP) | MUXN(ainmuxN))
 
+/** Positive Reference channels*/ 
+enum ADS1263_POSITIVE_REFMUX {
+    ADS1263_P_REFMUX_INTERNAL_REF = 0,
+    ADS1263_P_REFMUX_EXTERNAL_AIN0 = 1,
+    ADS1263_P_REFMUX_EXTERNAL_AIN2 = 2,
+    ADS1263_P_REFMUX_EXTERNAL_AIN4 = 3,
+    ADS1263_P_REFMUX_INTERNAL_ANALOG_VAVDD = 4,
+};
+
+/** Positive Reference channels*/ 
+enum ADS1263_NEGATIVE_REFMUX {
+    ADS1263_N_REFMUX_INTERNAL_REF = 0,
+    ADS1263_N_REFMUX_EXTERNAL_AIN1 = 1,
+    ADS1263_N_REFMUX_EXTERNAL_AIN3 = 2,
+    ADS1263_N_REFMUX_EXTERNAL_AIN5 = 3,
+    ADS1263_N_REFMUX_INTERNAL_ANALOG_VAVSS = 4,
+};
+
+/** Write positive reference channel bits*/
+#define REFMUXP(x) ((x<<3) & 0xF0)
+/** Write positive reference channel bits*/
+#define REFMUXN(x) ((x) & 0x0F)
+
+/** 
+ * Return reference channel configuration in register. 
+ * For possible channel value refer to #ADS1263_POSITIVE_REFMUX and #ADS1263_NEGATIVE_REFMUX
+ */
+#define REFMUX(ainmuxP, ainmuxN) (REFMUXP(ainmuxP) | REFMUXN(ainmuxN))
+
 /* ____________________ DEFINE Section ____________________ */
 /* Register addresses */
 #define ADS1263_ID              (0x00)
