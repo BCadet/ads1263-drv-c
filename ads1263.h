@@ -67,7 +67,7 @@ enum ADS1263_NEGATIVE_REFMUX {
  * Return reference channel configuration in register. 
  * For possible channel value refer to #ADS1263_POSITIVE_REFMUX and #ADS1263_NEGATIVE_REFMUX
  */
-#define REFMUX(ainmuxP, ainmuxN) (REFMUXP(ainmuxP) | REFMUXN(ainmuxN))
+#define REFMUX(muxP, muxN) (REFMUXP(muxP) | REFMUXN(muxN))
 
 /** Possible data rate (in sps)*/
 enum ADS1263_DATA_RATE {
@@ -115,7 +115,7 @@ enum ADS1263_PGA {
 /** 
  * Return MODE2 register configuration with GPA gain and data rate
  */
-#define MODE2(bypass, gain, datarate) (PGA_BYPASS(x) | GAIN(ainmuxP) | DATARATE(ainmuxN))
+#define MODE2(bypass, gain, datarate) (PGA_BYPASS(bypass) | GAIN(gain) | DATARATE(datarate))
 
 
 /* ____________________ DEFINE Section ____________________ */
