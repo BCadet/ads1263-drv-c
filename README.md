@@ -1,5 +1,7 @@
 # ads1263-drv-c
 
+\anchor ads1263-drv-c
+
 Object oriented C driver implemenation for the [ADS1263](http://www.ti.com/product/ADS1263)
 
 ## Licence
